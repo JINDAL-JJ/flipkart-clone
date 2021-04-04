@@ -7,7 +7,7 @@ export const getAllCategory = () => {
         const res = await axios.get(`category/getCategory`);
         // console.log(res);
 
-        if (res.status == 200) {
+        if (res.status === 200) {
             const categoriesList = res.data.categoryList;
 
             dispatch({

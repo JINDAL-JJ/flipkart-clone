@@ -1,13 +1,18 @@
 import React from "react";
 import "./App.css";
-import Header from "./components/Header";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomePage from "./containers/HomePage";
+import ProductListPage from "./containers/ProductListPage";
 
 function App() {
     return (
         <div className="App">
-            <Header />
-            <HomePage />
+            <Router>
+                <Switch>
+                    <Route path="/" exact component={HomePage} />
+                    <Route path="/:slug" exact component={ProductListPage} />
+                </Switch>
+            </Router>
         </div>
     );
 }

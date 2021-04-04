@@ -3,78 +3,88 @@ import { categoryConstants } from "../actions/constants";
 const initState = {
     categories: [],
     loading: false,
-    error: null
+    error: null,
 };
 
 const buildNewCategory = (parentId, categories, category) => {
     let myCategories = [];
 
-    if (parentId == undefined){
+    if (parentId == undefined) {
         return [
-            ...categories,{
+            ...categories,
+            {
                 _id: category._id,
                 name: category.name,
                 slug: category.slug,
-                children: []
-            }
-        ]
+                children: [],
+            },
+        ];
     }
 
-    for (let cat of categories){
-
-        if(cat._id == parentId){
+    for (let cat of categories) {
+        if (cat._id == parentId) {
+            const newCategory = {
+                _id: category._id,
+                name: category.name,
+                slug: category.slug,
+                parentId: category.parentId,
+                children: category.children,
+            };
             myCategories.push({
                 ...cat,
-                children: cat.children ? buildNewCategory(parentId, [...cat.children, {
-                    _id: category._id,
-                    name: category.name,
-                    slug: category.slug,
-                    parentId: category.parentId,
-                    children: category.children
-                }], category) : [],
-            })
-        }else{
+                children:
+                    cat.children.length > 0
+                        ? [...cat.children, newCategory]
+                        : [newCategory],
+            });
+        } else {
             myCategories.push({
                 ...cat,
-                children: cat.children ? buildNewCategory(parentId, cat.children, category) : [],
-            })
+                children: cat.children
+                    ? buildNewCategory(parentId, cat.children, category)
+                    : [],
+            });
         }
     }
 
     return myCategories;
-}
+};
 
 export default (state = initState, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case categoryConstants.GET_ALL_CATEGORIES_SUCCESS:
-            state={
+            state = {
                 ...state,
                 loading: false,
-                categories: action.payload.categories
-            }
+                categories: action.payload.categories,
+            };
             break;
         case categoryConstants.ADD_NEW_CATEGORY_REQUEST:
-            state={
+            state = {
                 ...state,
-                loading: true
-            }
+                loading: true,
+            };
             break;
         case categoryConstants.ADD_NEW_CATEGORY_SUCCESS:
             const category = action.payload.category;
-            const updatedCategory = buildNewCategory(category.parentId, state.categories, category);
-            // console.log(updatedCategory); 
+            const updatedCategory = buildNewCategory(
+                category.parentId,
+                state.categories,
+                category
+            );
+            // console.log(updatedCategory);
 
-            state={
+            state = {
                 ...state,
                 categories: updatedCategory,
-                loading: false
-            }
+                loading: false,
+            };
             break;
         case categoryConstants.ADD_NEW_CATEGORY_REQUEST:
-            state={
-                ...initState
-            }
+            state = {
+                ...initState,
+            };
             break;
     }
     return state;
-}
+};

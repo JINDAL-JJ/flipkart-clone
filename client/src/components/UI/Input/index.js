@@ -1,12 +1,12 @@
-import React from 'react'
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import React from "react";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 const Input = (props) => {
     return (
         <>
             <Form.Group>
-                <Form.Label>{props.label}</Form.Label>
-                <Form.Control 
+                {props.label && <Form.Label>{props.label}</Form.Label>}
+                <Form.Control
                     type={props.label}
                     placeholder={props.placeholder}
                     value={props.value}
@@ -17,7 +17,7 @@ const Input = (props) => {
                 </Form.Text>
             </Form.Group>
         </>
-    )
-}
+    );
+};
 
 export default Input;
